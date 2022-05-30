@@ -1,68 +1,111 @@
 package contact;
-import java.util.ArrayList;
-import java.util.List;
 
-public class ContactService {
-	public List<Contact> contacts = new ArrayList<Contact>();
-	
-	public void addContact(String id, String fName, String lName, String phone, String address) {
-		for (int i = 0; i < contacts.size(); i++) {
-			if (contacts.get(i).getContactID() == id) {
-				throw new IllegalArgumentException("Invalid ID");
-			}
-		}
-		Contact contact = new Contact(id, fName, lName, phone, address);
-		contacts.add(contact);
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+class ContactServiceTest {
+
+	@Test
+	void addContactIDNotUnique() {
+		var service = new ContactService();
+		service.addContact("123", "Franklin", "Durbin", "7402606638", "13 Wendy Way");
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			service.addContact("123", "Test", "Test", "1234567890", "Test");
+		});
+	}
+
+	@Test 
+	void addContact() {
+		var service = new ContactService();
+		service.addContact("132", "Franklin", "Durbin", "7402606638", "13 Wendy Way");
+		assertTrue(service.contacts.size() == 1);
 	}
 	
-	public void deleteContactByID(String id) {
-		for (int i = 0; i < contacts.size(); i++) {
-			if (contacts.get(i).getContactID() == id) {
-				contacts.get(i).deleteContact(contacts.get(i));
-				contacts.remove(contacts.get(i));
-				return;
-			}
-		}
-		throw new IllegalArgumentException("Invalid ID");
+	@Test
+	void deleteContact() {
+		var service = new ContactService();
+		service.addContact("132", "Franklin", "Durbin", "7402606638", "13 Wendy Way");
+		service.addContact("1", "Franklin", "Durbin", "7402606638", "13 Wendy Way");
+		service.deleteContactByID("132");
+		assertTrue(service.contacts.size() == 1);
 	}
 	
-	public void updateContactFirstName(String id, String name) {
-		for (int i = 0; i < contacts.size(); i++ ) {
-			if (contacts.get(i).getContactID() == id) {
-				contacts.get(i).setFirstName(name);
-				return;
-			}
-		}
-		throw new IllegalArgumentException("Invalid ID");
+	@Test
+	void deleteContactInvalidID () {
+		var service = new ContactService();
+		service.addContact("132", "Franklin", "Durbin", "7402606638", "13 Wendy Way");
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			service.deleteContactByID("1");
+		});
 	}
 	
-	public void updateContactLastName(String id, String name) {
-		for (int i = 0; i < contacts.size(); i++) {
-			if (contacts.get(i).getContactID() == id) {
-				contacts.get(i).setLastName(name);
-				return;
-			}
-		}
-		throw new IllegalArgumentException("Invalid ID");
+	@Test
+	void updateFirstNameInvalidID() {
+		var service = new ContactService();
+		service.addContact("132", "Franklin", "Durbin", "7402606638", "13 Wendy Way");
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			service.updateContactFirstName("1", "Test");
+		});
 	}
 	
-	public void updateContactPhone (String id, String phone) {
-		for (int i = 0; i < contacts.size(); i++) {
-			if (contacts.get(i).getContactID() == id) {
-				contacts.get(i).setPhone(phone);
-				return;
-			}
-		}
-		throw new IllegalArgumentException("Invalid ID");
+	@Test
+	void updateFirstName() {
+		var service = new ContactService();
+		service.addContact("132", "Franklin", "Durbin", "7402606638", "13 Wendy Way");
+		service.updateContactFirstName("132", "Test");
+		assertTrue(service.contacts.get(0).getFirstName() == "Test");
 	}
 	
-	public void updateContactAdd(String id, String add) {
-		for (int i = 0; i < contacts.size(); i++) {
-			if (contacts.get(i).getContactID() == id) {
-				contacts.get(i).setAddress(add);
-				return;
-			}
-		}
-		throw new IllegalArgumentException("Invalid ID");
+	@Test
+	void updateLastNameInvalidID() {
+		var service = new ContactService();
+		service.addContact("132", "Franklin", "Durbin", "7402606638", "13 Wendy Way");
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			service.updateContactLastName("1", "Test");
+		});
+	}
+	
+	@Test
+	void updateLastName() {
+		var service = new ContactService();
+		service.addContact("132", "Franklin", "Durbin", "7402606638", "13 Wendy Way");
+		service.updateContactLastName("132", "Test");
+		assertTrue(service.contacts.get(0).getLastName() == "Test");
+	}
+	
+	@Test
+	void updatePhoneInvalidID() {
+		var service = new ContactService();
+		service.addContact("132", "Franklin", "Durbin", "7402606638", "13 Wendy Way");
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			service.updateContactPhone("1", "1234567890");
+		});
+	}
+	
+	@Test
+	void updatePhone() {
+		var service = new ContactService();
+		service.addContact("132", "Franklin", "Durbin", "7402606638", "13 Wendy Way");
+		service.updateContactPhone("132", "1234567890");
+		assertTrue(service.contacts.get(0).getPhone() == "1234567890");
+	}
+	
+	@Test
+	void updateAddressInvalidID() {
+		var service = new ContactService();
+		service.addContact("132", "Franklin", "Durbin", "7402606638", "13 Wendy Way");
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			service.updateContactAdd("1", "1234567890");
+		});
+	}
+	
+	@Test
+	void updateAddress() {
+		var service = new ContactService();
+		service.addContact("132", "Franklin", "Durbin", "7402606638", "13 Wendy Way");
+		service.updateContactAdd("132", "1234567890");
+		assertTrue(service.contacts.get(0).getAddress() == "1234567890");
 	}
 }
