@@ -1,20 +1,15 @@
 package contact;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Contact {
-    
     private String contactID;
     private String firstName;
     private String lastName;
     private String phoneNumber;
     private String address;
-    List<String> ids = new ArrayList<String>();
 
     public Contact(String id, String fName, String lName, String phone, String add) {
 
-        if (ids.contains(id) || id == null || id.length() > 10) {
+        if (id == null || id.length() > 10) {
             throw new IllegalArgumentException("Invalid Contact ID");
         }
         if (fName == null || fName.length() > 10) {
@@ -35,7 +30,6 @@ public class Contact {
         lastName = lName;
         phoneNumber = phone;
         address = add;
-        ids.add(id);
     }
 
     public String getContactID() {
@@ -47,6 +41,9 @@ public class Contact {
     }
 
     public void setFirstName(String fName){
+    	if (fName == null || fName.length() > 10) {
+            throw new IllegalArgumentException("Invalid First Name");
+        }
         firstName = fName;
     }
 
@@ -55,6 +52,9 @@ public class Contact {
     }
 
     public void setLastName(String lName) {
+    	if (lName == null || lName.length() > 10) {
+            throw new IllegalArgumentException("Invalid Last Name");
+        }
         lastName = lName;
     }
 
@@ -63,7 +63,10 @@ public class Contact {
     }
 
     public void setPhone(String phone) {
-        phone = phoneNumber;
+    	if (phone == null || phone.length() != 10 || phone.matches("[0-9]+") == false) {
+            throw new IllegalArgumentException("Invalid Phone Number");
+        }
+        phoneNumber = phone;
     }
 
     public String getAddress() {
@@ -71,11 +74,13 @@ public class Contact {
     }
 
     public void setAddress(String add) {
+    	if (add == null || add.length() >= 30) {
+            throw new IllegalArgumentException("Invalid Address");
+        } 
         address = add;
     }
 
     public void deleteContact(Contact contact) {
-        ids.remove(contact.getContactID());
         contactID = null;
         firstName = null;
         lastName = null;
